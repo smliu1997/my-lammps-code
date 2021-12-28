@@ -7,8 +7,16 @@ Here we develop an improper style potential called dihedral/fourier. This potent
 Note lammps already has an improper style called fourier, and this potential is very different from improper style dihedral/fourier. 
 
 ## Notes for development
+
 Some template codes are saved in directory template-code. The templates are from the code contained in lammps-7Aug2019.tar.gz. The code improper_dihedral_fourier.cpp is modified mainly from template-code/dihedral_fourier.cpp. 
 
+## Instruction
+
+Examples:
+improper_style dihedral/fourier
+improper_coeff 1 1 3.0 1 20.0
+
+The input parameters are the same as dihedral_style fourier, the only difference is, improper_style dihedral/fourier is applied on impropers, while dihedral_style fourier is applied on dihedrals. 
 
 
 
