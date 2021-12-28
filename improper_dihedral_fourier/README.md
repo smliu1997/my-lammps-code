@@ -13,8 +13,10 @@ Some template codes are saved in directory template-code. The templates are from
 ## Instruction
 
 Examples:
+```
 improper_style dihedral/fourier
 improper_coeff 1 1 3.0 1 20.0
+```
 
 The input parameters are the same as dihedral_style fourier, the only difference is, improper_style dihedral/fourier is applied on impropers, while dihedral_style fourier is applied on dihedrals. 
 
