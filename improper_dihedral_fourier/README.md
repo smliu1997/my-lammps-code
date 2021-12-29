@@ -20,5 +20,7 @@ improper_coeff 1 1 3.0 1 20.0
 
 The input parameters are the same as dihedral_style fourier, the only difference is, improper_style dihedral/fourier is applied on impropers, while dihedral_style fourier is applied on dihedrals. 
 
+## Tests
 
+Two sets of tests are performed in directories test-4mer-dihedral-fourier and test-4mer-improper-dihedral-fourier. In these two tests, there is a molecule composed of 4 identical atoms (the structure data file is data.homopolymer). In the two tests, the only difference is, a dihedral_style fourier is performed in test-4mer-dihedral-fourier, while in test-4mer-improper-dihedral-fourier, all the dihedrals are defined as impropers (check data.homopolymer file for the difference) and improper_style dihedral/fourier is applied with the same parameters for dihedral_style fourier in the other simulation, and all the other parameters are the same in both simulations. The same random seed is used in both simulations, so the two simulations should give identical performance, such as identical potential energy at each step. 
 
