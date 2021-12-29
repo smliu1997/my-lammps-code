@@ -1,0 +1,772 @@
+LAMMPS (7 Aug 2019)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread. (../comm.cpp:93)
+  using 1 OpenMP thread(s) per MPI task
+variable        rseed equal   28
+
+#  ----    Settings  ----
+variable        T   equal   1.0
+units           lj
+atom_style      full
+boundary        p   p   p
+special_bonds   lj 0.0 1.0 1.0
+
+read_data       data.homopolymer
+  orthogonal box = (-53.1329 -53.1329 -53.1329) to (53.1329 53.1329 53.1329)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  12 atoms
+  scanning bonds ...
+  1 = max bonds/atom
+  scanning angles ...
+  1 = max angles/atom
+  scanning dihedrals ...
+  1 = max dihedrals/atom
+  reading bonds ...
+  11 bonds
+  reading angles ...
+  10 angles
+  reading dihedrals ...
+  9 dihedrals
+  2 = max # of 1-2 neighbors
+  2 = max # of 1-3 neighbors
+  4 = max # of 1-4 neighbors
+  6 = max # of special neighbors
+  special bonds CPU = 0.000389863 secs
+  read_data CPU = 0.00498656 secs
+neighbor        0.4 bin
+neigh_modify    every 1 delay 1
+atom_modify     sort 0 0.0
+
+#   ----    Force Field     ----
+bond_style      fene/expand
+bond_coeff      1 30.0 1.5 1.0 1.0 1.4
+angle_style     harmonic
+angle_coeff     1 1.5 2.0
+dihedral_style  fourier
+dihedral_coeff  1 1 10.0 1 -70.0
+pair_style      hybrid/overlay mie/cut 2.6
+pair_coeff      * * mie/cut 1.0 1.0 16.0 8.0 2.6
+pair_modify     tabinner 0.0000000001 shift yes
+
+thermo          1
+thermo_style    custom time temp pe etotal epair ebond eangle press vol
+thermo_modify   norm no flush yes
+
+#   ----    spherical confinement     ----
+#region          nucleus sphere 0.0 0.0 0.0 19.6889370749 side in
+#fix             wall all wall/region nucleus lj126 1.0 1.0 1.12
+
+fix             1 all nve
+
+minimize        1.0e-4 1.0e-6 100 1000
+WARNING: Using 'neigh_modify every 1 delay 0 check yes' setting during minimization (../min.cpp:168)
+Neighbor list info ...
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 3
+  ghost atom cutoff = 3
+  binsize = 1.5, bins = 71 71 71
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair mie/cut, perpetual
+      attributes: half, newton on
+      pair build: half/bin/newton
+      stencil: half/bin/3d/newton
+      bin: standard
+WARNING: Communication cutoff 3 is shorter than a bond length based estimate of 5.7325. This may lead to errors. (../comm.cpp:685)
+Per MPI rank memory allocation (min/avg/max) = 2.116 | 2.116 | 2.116 Mbytes
+Time Temp PotEng TotEng E_pair E_bond E_angle Press Volume 
+           0            0    2612076.1    2612076.1   -3.8235944    2611900.6    79.139606   -21.810193      1200000 
+       0.005            0    521273.35    521273.35    -6.593743    521056.95    78.961716   -3.6430647      1200000 
+        0.01            0    167559.48    167559.48   -7.1733595     167362.8    78.656939   -1.0074373      1200000 
+       0.015            0    56891.281    56891.281   -8.2808706    56695.721    78.897166  -0.29753256      1200000 
+        0.02            0    10810.714    10810.714    -9.896453    10618.703    79.195493  -0.04477813      1200000 
+       0.025            0    6224.7364    6224.7364   -10.384172    6039.1485    79.435653 -0.023359029      1200000 
+        0.03            0    3499.2299    3499.2299   -9.7070486    3321.4315    79.712818 -0.011608722      1200000 
+       0.035            0    1472.4415    1472.4415   -6.0507663    1290.1552     80.50251 -0.0037433475      1200000 
+        0.04            0    918.29796    918.29796    3.6479281     726.8908    80.836752 -0.0015742477      1200000 
+       0.045            0     630.8482     630.8482    82.553669    353.30573    80.074692 9.8151339e-05      1200000 
+        0.05            0    539.01367    539.01367    47.612258    312.99412    75.626008 7.3749814e-05      1200000 
+       0.055            0    522.40688    522.40688    45.719618    300.71942    74.397241 0.00010962709      1200000 
+        0.06            0    511.13237    511.13237    43.590172    292.11252    74.553414 0.0001197927      1200000 
+       0.065            0    504.81626    504.81626    34.699944    296.06502    74.366976 5.3027498e-05      1200000 
+        0.07            0    498.25815    498.25815    22.546351    303.65054    73.910167 -4.343417e-05      1200000 
+       0.075            0    493.69873    493.69873    29.966015    292.14514    74.190761 3.6477101e-05      1200000 
+        0.08            0    491.62729    491.62729    31.980036    288.33848    74.417906 6.0729073e-05      1200000 
+       0.085            0    490.36738    490.36738    27.524038     291.6372    74.632571 2.4066517e-05      1200000 
+        0.09            0    489.74688    489.74688    24.758923    293.85477    74.961758 2.3931239e-07      1200000 
+       0.095            0    489.16838    489.16838    29.036876    288.69812     75.43657 3.9262017e-05      1200000 
+         0.1            0    487.51088    487.51088    26.859572    289.50418    75.478361 2.482267e-05      1200000 
+       0.105            0    486.81714    486.81714     25.57814    290.41696    75.707073 1.3865991e-05      1200000 
+        0.11            0    485.64931    485.64931    26.895555    287.89935    76.202423 2.7496201e-05      1200000 
+       0.115            0    484.89738    484.89738    27.604588    286.63188    76.698948 3.3893022e-05      1200000 
+        0.12            0    483.19282    483.19282    26.194787    286.48441    76.892545 2.6251454e-05      1200000 
+       0.125            0    483.18551    483.18551    26.185124    286.48945     76.89333 2.6179409e-05      1200000 
+Loop time of 0.00778669 on 1 procs for 25 steps with 12 atoms
+
+85.1% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = energy tolerance
+  Energy initial, next-to-last, final = 
+         2612076.14492      483.192824855      483.185510447
+  Force two-norm initial, final = 2.67076e+07 84.3317
+  Force max component initial, final = 7.13792e+06 31.2181
+  Final line search alpha, max atom move = 0.00078746 0.024583
+  Iterations, force evaluations = 25 69
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.0019965  | 0.0019965  | 0.0019965  |   0.0 | 25.64
+Bond    | 0.00068146 | 0.00068146 | 0.00068146 |   0.0 |  8.75
+Neigh   | 0.0028588  | 0.0028588  | 0.0028588  |   0.0 | 36.71
+Comm    | 4.2513e-05 | 4.2513e-05 | 4.2513e-05 |   0.0 |  0.55
+Output  | 0.0018855  | 0.0018855  | 0.0018855  |   0.0 | 24.21
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.000322   |            |       |  4.14
+
+Nlocal:    12 ave 12 max 12 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    0 ave 0 max 0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    55 ave 55 max 55 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 55
+Ave neighs/atom = 4.58333
+Ave special neighs/atom = 5
+Neighbor list builds = 4
+Dangerous builds = 0
+velocity        all create ${T} ${rseed} rot yes mom yes dist gaussian
+velocity        all create 1 ${rseed} rot yes mom yes dist gaussian
+velocity        all create 1 28 rot yes mom yes dist gaussian
+reset_timestep  0
+fix             bias all colvars input.colvars output output
+fix_modify      bias energy yes
+
+
+#    ----    Normal temperature simulation     ----
+dump            2 all dcd 50 DUMP_FILE.dcd
+dump_modify     2 unwrap yes
+
+timestep        0.0001
+
+fix             3 all langevin ${T} ${T} 10.0 ${rseed}
+fix             3 all langevin 1 ${T} 10.0 ${rseed}
+fix             3 all langevin 1 1 10.0 ${rseed}
+fix             3 all langevin 1 1 10.0 28
+run             100
+WARNING: Communication cutoff 3 is shorter than a bond length based estimate of 5.7325. This may lead to errors. (../comm.cpp:685)
+colvars: Creating proxy instance
+colvars: ----------------------------------------------------------------------
+colvars: Initializing the collective variables module, version "2019-08-05".
+colvars: Please cite Fiorin et al, Mol Phys 2013:
+colvars:  http://dx.doi.org/10.1080/00268976.2013.813594
+colvars: in any publication based on this calculation.
+colvars: Using LAMMPS interface, version "2019-08-01".
+colvars: ----------------------------------------------------------------------
+colvars: Reading new configuration from file "input.colvars":
+colvars: # smp = on [default]
+colvars: # colvarsTrajFrequency = 1
+colvars: # colvarsRestartFrequency = 0 [default]
+colvars: # scriptedColvarForces = off [default]
+colvars: # scriptingAfterBiases = off [default]
+colvars: ----------------------------------------------------------------------
+colvars:   Initializing a new collective variable.
+colvars:   # name = "d2"
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 0.1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   All components initialized.
+colvars:   # timeStepFactor = 1 [default]
+colvars:   # width = 1 [default]
+colvars:   # lowerBoundary = 0 [default]
+colvars:   # upperBoundary = 0 [default]
+colvars:   # expandBoundaries = off [default]
+colvars:   # extendedLagrangian = off [default]
+colvars:   # outputValue = on [default]
+colvars:   # outputVelocity = off [default]
+colvars:   # outputTotalForce = off [default]
+colvars:   # outputAppliedForce = off [default]
+colvars:   # subtractAppliedForce = off [default]
+colvars:   # runAve = off [default]
+colvars:   # corrFunc = off [default]
+colvars: ----------------------------------------------------------------------
+colvars:   Initializing a new collective variable.
+colvars:   # name = "d1_12"
+colvars:   Initializing a new "distance" component.
+colvars:     # name = "" [default]
+colvars:     # componentCoeff = 1
+colvars:     # componentExp = 1 [default]
+colvars:     # period = 0 [default]
+colvars:     # wrapAround = 0 [default]
+colvars:     # forceNoPBC = off [default]
+colvars:     # scalable = on [default]
+colvars:       Initializing atom group "group1".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group1" defined with 1 atoms requested.
+colvars:       Initializing atom group "group2".
+colvars:       # name = "" [default]
+colvars:       # centerReference = off [default]
+colvars:       # rotateReference = off [default]
+colvars:       # atomsOfGroup = "" [default]
+colvars:       # indexGroup = "" [default]
+colvars:       # psfSegID =  [default]
+colvars:       # atomsFile = "" [default]
+colvars:       # dummyAtom = ( 0 , 0 , 0 ) [default]
+colvars:       # enableForces = on [default]
+colvars:       # enableFitGradients = on [default]
+colvars:       # printAtomIDs = off [default]
+colvars:       Atom group "group2" defined with 1 atoms requested.
+colvars:     # oneSiteSystemForce = off [default]
+colvars:     # oneSiteTotalForce = off [default]
+colvars:   All components initialized.
+colvars:   # timeStepFactor = 1 [default]
+colvars:   # width = 1 [default]
+colvars:   # lowerBoundary = 0 [default]
+colvars:   # upperBoundary = 0 [default]
+colvars:   # expandBoundaries = off [default]
+colvars:   # extendedLagrangian = off [default]
+colvars:   # outputValue = on [default]
+colvars:   # outputVelocity = off [default]
+colvars:   # outputTotalForce = off [default]
+colvars:   # outputAppliedForce = off [default]
+colvars:   # subtractAppliedForce = off [default]
+colvars:   # runAve = off [default]
+colvars:   # corrFunc = off [default]
+colvars: ----------------------------------------------------------------------
+colvars: Collective variables initialized, 2 in total.
+colvars: No collective variables biases were defined.
+colvars: ----------------------------------------------------------------------
+colvars: Collective variables module (re)initialized.
+colvars: ----------------------------------------------------------------------
+colvars: The restart output state file will be "rest.colvars.state".
+colvars: The final output state file will be "output.colvars.state".
+colvars: Writing to colvar trajectory file "output.colvars.traj".
+colvars: Re-initialized atom group for variable "d2":0/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":0/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":1/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":1/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":2/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":2/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":3/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":3/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":4/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":4/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":5/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":5/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":6/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":6/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":7/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":7/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":8/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":8/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":9/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d2":9/1. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d1_12":0/0. 1 atoms: total mass = 1, total charge = 0.
+colvars: Re-initialized atom group for variable "d1_12":0/1. 1 atoms: total mass = 1, total charge = 0.
+Per MPI rank memory allocation (min/avg/max) = 2.117 | 2.117 | 2.117 Mbytes
+Time Temp PotEng TotEng E_pair E_bond E_angle Press Volume 
+           0            1    483.18551    499.68551    26.185124    286.48945     76.89333 3.5346075e-05      1200000 
+      0.0001   0.99997756     483.1951    499.69473    26.246261    286.42933     76.89806 3.5860716e-05      1200000 
+      0.0002    1.0009215    483.20727    499.72247    26.307974    286.37123    76.902768 3.6380761e-05      1200000 
+      0.0003    1.0012839    483.22202    499.74321    26.370164    286.31526    76.907436 3.6891135e-05      1200000 
+      0.0004   0.99962624    483.23937     499.7332    26.433114    286.26122    76.912083 3.7381101e-05      1200000 
+      0.0005    0.9983919    483.25922    499.73269    26.496399    286.20932    76.916711 3.7869699e-05      1200000 
+      0.0006   0.99734501    483.28165    499.73785    26.560118    286.15948    76.921351 3.8355638e-05      1200000 
+      0.0007   0.99678983     483.3066    499.75363    26.623996    286.11202    76.925989 3.8839272e-05      1200000 
+      0.0008   0.99767043    483.33406    499.79562    26.688341    286.06668     76.93059 3.9331809e-05      1200000 
+      0.0009   0.99684805    483.36401      499.812    26.752872    286.02363    76.935218 3.9802383e-05      1200000 
+       0.001   0.99608528    483.39646    499.83186    26.817418    285.98306    76.939835 4.0265454e-05      1200000 
+      0.0011   0.99455086    483.43141     499.8415    26.882886    285.94404    76.944469 4.0721533e-05      1200000 
+      0.0012   0.99111145    483.46885    499.82219    26.949176    285.90661    76.949109 4.1159461e-05      1200000 
+      0.0013   0.98826604    483.50874    499.81513    27.015721    285.87138    76.953741 4.1597104e-05      1200000 
+      0.0014   0.98571174     483.5511    499.81534    27.082398    285.83847    76.958325 4.2030403e-05      1200000 
+      0.0015   0.98234439    483.59587    499.80456    27.149627    285.80743    76.962892 4.2453241e-05      1200000 
+      0.0016   0.97964018    483.64297    499.80703    27.217063     285.7784    76.967468 4.2876806e-05      1200000 
+      0.0017   0.97779556    483.69235    499.82598    27.285141    285.75103    76.972076 4.3306377e-05      1200000 
+      0.0018    0.9753326    483.74408    499.83707     27.35338     285.7259     76.97666 4.3723913e-05      1200000 
+      0.0019    0.9731015    483.79814    499.85431    27.422269    285.70246    76.981257 4.4141702e-05      1200000 
+       0.002   0.97091214    483.85447    499.87452    27.491643    285.68088    76.985867 4.4556306e-05      1200000 
+      0.0021   0.96763842    483.91306     499.8791    27.561325    285.66112    76.990485 4.4956667e-05      1200000 
+      0.0022   0.96442155    483.97404      499.887    27.631599    285.64311    76.995064 4.5354904e-05      1200000 
+      0.0023   0.96123583    484.03734    499.89773    27.701933    285.62748    76.999583 4.574603e-05      1200000 
+      0.0024   0.95558592    484.10294    499.87011    27.772348    285.61418    77.004101 4.610736e-05      1200000 
+      0.0025   0.95001568    484.17065    499.84591    27.843098    285.60269    77.008567 4.6465547e-05      1200000 
+      0.0026   0.94540325    484.24042    499.83957    27.913812    285.59333    77.013004 4.6825219e-05      1200000 
+      0.0027   0.94114679    484.31211    499.84103    27.984767    285.58569    77.017452 4.7183859e-05      1200000 
+      0.0028   0.93827689    484.38579    499.86736    28.056382    285.57948    77.021898 4.7554086e-05      1200000 
+      0.0029   0.93405307    484.46148    499.87336    28.128562    285.57468    77.026384 4.7910524e-05      1200000 
+       0.003   0.92843603    484.53903    499.85822    28.200712     285.5719    77.030864 4.8247439e-05      1200000 
+      0.0031   0.92309823     484.6184    499.84952    28.272837    285.57114    77.035315 4.8580174e-05      1200000 
+      0.0032    0.9178158    484.69959    499.84355    28.345165    285.57206    77.039744 4.8908872e-05      1200000 
+      0.0033   0.91197408    484.78251    499.83009    28.417491    285.57489    77.044147 4.9226098e-05      1200000 
+      0.0034     0.905979    484.86715     499.8158    28.489986    285.57934    77.048551 4.9537749e-05      1200000 
+      0.0035   0.89943784    484.95357     499.7943    28.562987     285.5851    77.052991 4.9842725e-05      1200000 
+      0.0036   0.89304053    485.04149    499.77666    28.635899    285.59248    77.057431 5.0143139e-05      1200000 
+      0.0037   0.88745752    485.13106    499.77411    28.708859    285.60149    77.061882 5.0445927e-05      1200000 
+      0.0038    0.8813839     485.2222    499.76504    28.782039    285.61189    77.066342 5.0740885e-05      1200000 
+      0.0039    0.8743237    485.31491    499.74126    28.855536    285.62371     77.07083 5.1024086e-05      1200000 
+       0.004     0.867723    485.40901    499.72644      28.9289    285.63712    77.075332 5.1305556e-05      1200000 
+      0.0041   0.86114414    485.50445    499.71333    29.001854    285.65244     77.07979 5.1578764e-05      1200000 
+      0.0042   0.85351231    485.60103    499.68399    29.073985    285.66991    77.084209 5.1830806e-05      1200000 
+      0.0043   0.84657608    485.69884    499.66734    29.146328    285.68859    77.088628 5.2086609e-05      1200000 
+      0.0044   0.84071284    485.79789    499.66965    29.218157    285.70914    77.093043 5.2343415e-05      1200000 
+      0.0045   0.83418294     485.8979    499.66192     29.28944    285.73135    77.097474 5.2585573e-05      1200000 
+      0.0046     0.827658    485.99895    499.65531    29.360317    285.75511     77.10185 5.2820456e-05      1200000 
+      0.0047   0.82297351    486.10108    499.68014    29.430783     285.7804    77.106244 5.3064722e-05      1200000 
+      0.0048   0.81706748    486.20449     499.6861     29.50157    285.80673    77.110667 5.3296136e-05      1200000 
+      0.0049   0.80961406    486.30873    499.66736    29.572099    285.83423    77.115076 5.3508063e-05      1200000 
+       0.005   0.80295466      486.414    499.66276    29.642841    285.86259    77.119529 5.3725826e-05      1200000 
+      0.0051   0.79578962    486.52023    499.65076    29.713378    285.89223     77.12392 5.3933633e-05      1200000 
+      0.0052   0.78804447     486.6271    499.62983     29.78368    285.92286    77.128284 5.4131438e-05      1200000 
+      0.0053   0.78098112    486.73464    499.62083    29.853595    285.95471    77.132603 5.4329395e-05      1200000 
+      0.0054   0.77517927    486.84261    499.63307    29.923084    285.98749    77.136956 5.4533421e-05      1200000 
+      0.0055   0.76985807    486.95134      499.654    29.992458     286.0213    77.141279 5.473789e-05      1200000 
+      0.0056    0.7636494    487.06058     499.6608    30.061514    286.05596    77.145619 5.4929627e-05      1200000 
+      0.0057   0.75728949    487.17048    499.66576    30.130286    286.09164    77.149945 5.5115168e-05      1200000 
+      0.0058   0.75150486    487.28067     499.6805    30.198469    286.12828     77.15432 5.5299479e-05      1200000 
+      0.0059    0.7459227    487.39121    499.69894     30.26621    286.16578    77.158664 5.5480455e-05      1200000 
+       0.006   0.73980122    487.50225    499.70897    30.333598    286.20424    77.163024 5.5651371e-05      1200000 
+      0.0061   0.73260685    487.61364    499.70165    30.400393    286.24362    77.167405 5.5805966e-05      1200000 
+      0.0062   0.72481634    487.72513     499.6846    30.466947    286.28338    77.171792 5.5952567e-05      1200000 
+      0.0063   0.71904184    487.83652    499.70071    30.532619    286.32403    77.176161 5.6109749e-05      1200000 
+      0.0064   0.71374229     487.9484    499.72515    30.598227     286.3653    77.180498 5.6268926e-05      1200000 
+      0.0065   0.70699059    488.06028    499.72563    30.663145    286.40737    77.184849 5.640842e-05      1200000 
+      0.0066   0.69932529    488.17195    499.71082    30.728063    286.44927    77.189224 5.6540053e-05      1200000 
+      0.0067   0.69130041    488.28334     499.6898    30.792629    286.49131    77.193597 5.6666174e-05      1200000 
+      0.0068   0.68388111    488.39468    499.67872    30.857004    286.53347    77.197995 5.6796429e-05      1200000 
+      0.0069   0.67635117    488.50544    499.66524    30.920671     286.5759    77.202403 5.6920872e-05      1200000 
+       0.007   0.66878848    488.61582    499.65083    30.983431    286.61891     77.20681   5.7038e-05      1200000 
+      0.0071   0.66104279    488.72574    499.63295    31.045708    286.66206    77.211177 5.7150367e-05      1200000 
+      0.0072   0.65390032    488.83506    499.62441    31.107369    286.70533    77.215492 5.7264482e-05      1200000 
+      0.0073    0.6479659     488.9443    499.63574    31.168478    286.74914     77.21978 5.7385059e-05      1200000 
+      0.0074   0.64261407    489.05316     499.6563     31.22862    286.79366     77.22401 5.7503232e-05      1200000 
+      0.0075    0.6370213    489.16148    499.67233    31.288011    286.83837    77.228277 5.7614173e-05      1200000 
+      0.0076   0.62951502    489.26948    499.65648    31.347035    286.88327    77.232509 5.7704908e-05      1200000 
+      0.0077    0.6213831    489.37681    499.62963    31.405049     286.9286    77.236704 5.778301e-05      1200000 
+      0.0078   0.61541978    489.48343    499.63785    31.462279    286.97419    77.240879 5.7876179e-05      1200000 
+      0.0079   0.60957846    489.58926    499.64731    31.518735    287.01982    77.245101 5.7966166e-05      1200000 
+       0.008   0.60187726    489.69397    499.62494    31.574385    287.06519    77.249342 5.8035703e-05      1200000 
+      0.0081   0.59452502    489.79732    499.60698    31.628875    287.11046    77.253546 5.8102301e-05      1200000 
+      0.0082   0.58764897    489.89941    499.59562    31.682395    287.15543    77.257758 5.8168795e-05      1200000 
+      0.0083   0.58069213    490.00048     499.5819    31.735434    287.19982    77.261964 5.8233717e-05      1200000 
+      0.0084   0.57352382    490.10019    499.56333     31.78775    287.24357    77.266199 5.8294959e-05      1200000 
+      0.0085   0.56749133    490.19852    499.56213    31.839321    287.28671    77.270436  5.83645e-05      1200000 
+      0.0086   0.56291254    490.29604     499.5841    31.889983    287.32992    77.274665 5.8442026e-05      1200000 
+      0.0087   0.55719636    490.39254    499.58628    31.939779    287.37298    77.278954 5.8504798e-05      1200000 
+      0.0088   0.55071284    490.48777    499.57453     31.98894    287.41544    77.283221 5.8558883e-05      1200000 
+      0.0089   0.54475673    490.58132    499.56981    32.036907    287.45745    77.287469 5.8612782e-05      1200000 
+       0.009   0.54006256    490.67356    499.58459    32.083551    287.49943    77.291727 5.8671294e-05      1200000 
+      0.0091   0.53555748    490.76453    499.60123    32.129371    287.54095    77.295997 5.8728423e-05      1200000 
+      0.0092   0.53064101    490.85403    499.60961    32.174133    287.58209    77.300272 5.877729e-05      1200000 
+      0.0093   0.52592164    490.94194    499.61965     32.21761    287.62306    77.304508 5.8821659e-05      1200000 
+      0.0094   0.52190684    491.02851    499.63998    32.260326    287.66347    77.308755 5.8870171e-05      1200000 
+      0.0095   0.51779438    491.11336    499.65697    32.302296    287.70289    77.313051 5.891689e-05      1200000 
+      0.0096   0.51246053    491.19682    499.65242    32.343161    287.74201    77.317375 5.8947279e-05      1200000 
+      0.0097   0.50723459     491.2784    499.64777    32.382463    287.78084    77.321685 5.8970982e-05      1200000 
+      0.0098   0.50154376    491.35835    499.63382    32.420913    287.81892    77.326002 5.8988432e-05      1200000 
+      0.0099   0.49574807    491.43657    499.61641    32.458396    287.85613     77.33034 5.9002444e-05      1200000 
+        0.01   0.49052923    491.51338    499.60711    32.494981    287.89269    77.334672 5.9018958e-05      1200000 
+colvars: Saving collective variables state to "output.colvars.state".
+Loop time of 0.0142623 on 1 procs for 100 steps with 12 atoms
+
+Performance: 60579.234 tau/day, 7011.485 timesteps/s
+62.4% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.0026498  | 0.0026498  | 0.0026498  |   0.0 | 18.58
+Bond    | 0.00098026 | 0.00098026 | 0.00098026 |   0.0 |  6.87
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 6.0922e-05 | 6.0922e-05 | 6.0922e-05 |   0.0 |  0.43
+Output  | 0.0077707  | 0.0077707  | 0.0077707  |   0.0 | 54.48
+Modify  | 0.0025412  | 0.0025412  | 0.0025412  |   0.0 | 17.82
+Other   |            | 0.0002594  |            |       |  1.82
+
+Nlocal:    12 ave 12 max 12 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    0 ave 0 max 0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:    55 ave 55 max 55 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 55
+Ave neighs/atom = 4.58333
+Ave special neighs/atom = 5
+Neighbor list builds = 0
+Dangerous builds = 0
+
+colvars: Resetting the Collective Variables module.
+
+Please see the log.cite file for references relevant to this simulation
+
+Total wall time: 0:00:00

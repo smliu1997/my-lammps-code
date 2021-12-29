@@ -1,0 +1,65 @@
+colvarsTrajFrequency    1
+
+colvar {
+    name d2
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 1 }
+        group2 { atomNumbers 3 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 2 }
+        group2 { atomNumbers 4 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 3 }
+        group2 { atomNumbers 5 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 4 }
+        group2 { atomNumbers 6 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 5 }
+        group2 { atomNumbers 7 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 6 }
+        group2 { atomNumbers 8 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 7 }
+        group2 { atomNumbers 9 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 8 }
+        group2 { atomNumbers 10 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 9 }
+        group2 { atomNumbers 11 }
+    }
+    distance {
+        componentCoeff 0.1
+        group1 { atomNumbers 10 }
+        group2 { atomNumbers 12 }
+    }
+}
+
+colvar {
+    name d1_12
+    distance {
+        componentCoeff 1
+        group1 { atomNumbers 1 }
+        group2 { atomNumbers 12 }
+    }
+}
+
