@@ -1,0 +1,55 @@
+colvarsTrajFrequency    1
+
+colvar {
+    name d1_2
+    distance {
+        componentCoeff 1
+        group1 { atomNumbers 1 }
+        group2 { atomNumbers 2 }
+    }
+}
+
+colvar {
+    name d1_3
+    distance {
+        componentCoeff 1
+        group1 { atomNumbers 1 }
+        group2 { atomNumbers 3 }
+    }
+}
+
+colvar {
+    name d1_4
+    distance {
+        componentCoeff 1
+        group1 { atomNumbers 1 }
+        group2 { atomNumbers 4 }
+    }
+}
+
+colvar {
+    name d2_3
+    distance {
+        componentCoeff 1
+        group1 { atomNumbers 2 }
+        group2 { atomNumbers 3 }
+    }
+}
+
+colvar {
+    name d2_4
+    distance {
+        componentCoeff 1
+        group1 { atomNumbers 2 }
+        group2 { atomNumbers 4 }
+    }
+}
+
+colvar {
+    name d3_4
+    distance {
+        componentCoeff 1
+        group1 { atomNumbers 3 }
+        group2 { atomNumbers 4 }
+    }
+}
