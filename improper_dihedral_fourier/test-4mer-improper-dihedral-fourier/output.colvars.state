@@ -1,0 +1,16 @@
+configuration {
+  step          100
+  dt 1.000000e-04
+  version 2019-08-05
+}
+
+colvar {
+  name d2
+  x  5.73756550233766e-01
+}
+
+colvar {
+  name d1_12
+  x  1.69606284403274e+00
+}
+
